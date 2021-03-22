@@ -9,6 +9,7 @@
   <link href="https://fonts.googleapis.com/css?family=Istok+Web|Montserrat:800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="assets/css/style.css" />
   <link rel="manifest" href="./dist/manifest.json">
+
   <title>Newsy</title>
 </head>
 
@@ -23,21 +24,12 @@
     </div>
   </nav>
   <header>
-    <h1>Your News</h1>
-    <div class="add-topic-container">
-      <h2>Add or Select a Topic</h2>
-      <form action="POST">
-        <input aria-label="Add a topic" id="add-topic" type="text" placeholder="Technology" />
-        <button id="submit-topic" class="button--primary">
-          Add
-        </button>
-      </form>
-    </div>
+    <h1>Loading...</h1>
+    <h2>Favorite Stories</h2>
   </header>
-
-  <div class="topic-container"></div>
-  <script src="dist/app.bundle.js"></script>
-  <script type="text/javascript">
+  <div class="article-container"></div>
+  <script src="dist/favorites.bundle.js"></script>
+  <script>
     (function () {
       if ("serviceWorker" in navigator) {
         navigator.serviceWorker.register("./service-worker.js", { scope: "/" })

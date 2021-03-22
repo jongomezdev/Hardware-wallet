@@ -1,153 +1,92 @@
-let transactions = [];
-let myChart;
+import { createElement } from "./domMethods";
+// Setting up dummy topics data
+let topicData = [
+  {
+    id: 1,
+    name: "Politics"
+  },
+  {
+    id: 2,
+    name: "Environment"
+  },
+  {
+    id: 3,
+    name: "Sports"
+  },
+  {
+    id: 4,
+    name: "Entertainment"
+  }
+];
 
-fetch("/api/transaction")
-  .then(response => {
-    return response.json();
-  })
-  .then(data => {
-    // save db data on global variable
-    transactions = data;
+let lastId = 4;
 
-    populateTotal();
-    populateTable();
-    populateChart();
-  });
+// Empty topic container, render topics
+function renderTopics() {
+  const topicContainer = document.querySelector(".topic-container");
+  const topics = createTopics(topicData);
 
-function populateTotal() {
-  // reduce transaction amounts to a single total value
-  let total = transactions.reduce((total, t) => {
-    return total + parseInt(t.value);
-  }, 0);
-
-  let totalEl = document.querySelector("#total");
-  totalEl.textContent = total;
-}
-
-function populateTable() {
-  let tbody = document.querySelector("#tbody");
-  tbody.innerHTML = "";
-
-  transactions.forEach(transaction => {
-    // create and populate a table row
-    let tr = document.createElement("tr");
-    tr.innerHTML = `
-      <td>${transaction.name}</td>
-      <td>${transaction.value}</td>
-    `;
-
-    tbody.appendChild(tr);
-  });
-}
-
-function populateChart() {
-  // copy array and reverse it
-  let reversed = transactions.slice().reverse();
-  let sum = 0;
-
-  // create date labels for chart
-  let labels = reversed.map(t => {
-    let date = new Date(t.date);
-    return `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
-  });
-
-  // create incremental values for chart
-  let data = reversed.map(t => {
-    sum += parseInt(t.value);
-    return sum;
-  });
-
-  // remove old chart if it exists
-  if (myChart) {
-    myChart.destroy();
+  while (topicContainer.firstChild) {
+    topicContainer.removeChild(topicContainer.firstChild);
   }
 
-  let ctx = document.getElementById("myChart").getContext("2d");
-
-  myChart = new Chart(ctx, {
-    type: 'line',
-      data: {
-        labels,
-        datasets: [{
-            label: "Total Over Time",
-            fill: true,
-            backgroundColor: "#6666ff",
-            data
-        }]
-    }
-  });
+  topicContainer.appendChild(topics);
 }
 
-function sendTransaction(isAdding) {
-  let nameEl = document.querySelector("#t-name");
-  let amountEl = document.querySelector("#t-amount");
-  let errorEl = document.querySelector(".form .error");
+// Return HTML for each topic provided
+function createTopics(topicData) {
+  const fragment = document.createDocumentFragment();
 
-  // validate form
-  if (nameEl.value === "" || amountEl.value === "") {
-    errorEl.textContent = "Missing Information";
+  topicData.forEach(data => {
+    const topic = createTopic(data);
+    fragment.appendChild(topic);
+  });
+
+  return fragment;
+}
+
+// Return markup for a topic object
+function createTopic({ name, id }) {
+  return createElement(
+    "div",
+    { class: "topic" },
+    createElement(
+      "button",
+      { "aria-label": "Close", "data-id": id, onClick: handleTopicDelete },
+      "×"
+    ),
+    createElement("a", { href: `topic.html?query=${name}` }, name)
+  );
+}
+
+// Deletes a topic on click
+function handleTopicDelete(event) {
+  const id = Number(event.target.getAttribute("data-id"));
+
+  topicData = topicData.filter(topic => topic.id !== id);
+
+  renderTopics();
+}
+
+function handleTopicAdd(event) {
+  event.preventDefault();
+
+  const input = document.querySelector("#add-topic");
+  const value = input.value.trim();
+
+  if (!value) {
     return;
   }
-  else {
-    errorEl.textContent = "";
-  }
 
-  // create record
-  let transaction = {
-    name: nameEl.value,
-    value: amountEl.value,
-    date: new Date().toISOString()
-  };
+  topicData = [...topicData, { id: ++lastId, name: value }];
 
-  // if subtracting funds, convert amount to negative number
-  if (!isAdding) {
-    transaction.value *= -1;
-  }
+  input.value = "";
 
-  // add to beginning of current array of data
-  transactions.unshift(transaction);
-
-  // re-run logic to populate ui with new record
-  populateChart();
-  populateTable();
-  populateTotal();
-  
-  // also send to server
-  fetch("/api/transaction", {
-    method: "POST",
-    body: JSON.stringify(transaction),
-    headers: {
-      Accept: "application/json, text/plain, */*",
-      "Content-Type": "application/json"
-    }
-  })
-  .then(response => {    
-    return response.json();
-  })
-  .then(data => {
-    if (data.errors) {
-      errorEl.textContent = "Missing Information";
-    }
-    else {
-      // clear form
-      nameEl.value = "";
-      amountEl.value = "";
-    }
-  })
-  .catch(err => {
-    // fetch failed, so save in indexed db
-    saveRecord(transaction);
-
-    // clear form
-    nameEl.value = "";
-    amountEl.value = "";
-  });
+  renderTopics();
 }
 
-document.querySelector("#add-btn").onclick = function() {
-  sendTransaction(true);
-};
+// Renders topics on page load
+renderTopics();
 
-document.querySelector("#sub-btn").onclick = function() {
-  sendTransaction(false);
-};
+// Handle new topic submissions
+document.querySelector("#submit-topic").addEventListener("click", handleTopicAdd);
