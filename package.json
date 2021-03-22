@@ -1,7 +1,7 @@
 {
-  "name": "Solved",
+  "name": "budget-app",
   "version": "1.0.0",
-  "description": "",
+  "description": "An app that allows users to actively create transactions while offline",
   "main": "server.js",
   "scripts": {
     "start": "if-env NODE_ENV=production && npm run start:prod || npm run start:dev",
@@ -17,7 +17,10 @@
   "license": "ISC",
   "dependencies": {
     "express": "^4.17.1",
-    "if-env": "^1.0.4"
+    "compression": "^1.7.4",
+    "mongoose": "^5.5.15",
+    "if-env": "^1.0.4",
+    "morgan": "^1.9.1"
   },
   "devDependencies": {
     "concurrently": "^5.2.0",
