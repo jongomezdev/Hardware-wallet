@@ -19,7 +19,7 @@ request.onerror = function (event) {
   console.log(`Something went wrong... ${event.target.errorCode}`);
 };
 
-export function saveRecord(record) {
+function saveRecord(record) {
   const transaction = db.transaction(['pending'], 'readwrite');
 
   const store = transaction.objectStore('pending');
