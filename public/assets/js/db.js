@@ -1,5 +1,4 @@
 let db;
-
 const request = indexedDB.open('budget', 1);
 
 request.onupgradeneeded = function (event) {
@@ -16,17 +15,17 @@ request.onsuccess = function (event) {
 };
 
 request.onerror = function (event) {
-  console.log(`Something went wrong... ${event.target.errorCode}`);
+  console.log('Something went wrong' + event.target.errorCode);
 };
 
 function saveRecord(record) {
-  const transaction = db.transaction[('pending', 'readwrite')];
+  const transaction = db.transaction('pending', 'readwrite');
   const store = transaction.objectStore('pending');
   store.add(record);
 }
 
 function checkDatabase() {
-  const transaction = db.transaction(['pending'], 'readwrite');
+  const transaction = db.transaction('pending', 'readwrite');
   const store = transaction.objectStore('pending');
   const getAll = store.getAll();
 
@@ -43,7 +42,9 @@ function checkDatabase() {
         .then((response) => response.json())
         .then(() => {
           const transaction = db.transaction('pending', 'readwrite');
+
           const store = transaction.objectStore('pending');
+
           store.clear();
         });
     }
