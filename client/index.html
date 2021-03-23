@@ -56,5 +56,18 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
     <script src="dist/bundle.js"></script>
     <script src="./service-worker.js"></script>
+    <script>
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker
+          .register('service-worker.js')
+          .then((reg) => {
+            console.log('Service worker registered');
+          })
+          .catch((err) => {
+            console.log('Service worker registration failed');
+            console.log(err);
+          });
+      }
+    </script>
   </body>
 </html>
