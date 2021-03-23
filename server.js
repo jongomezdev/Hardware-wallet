@@ -15,15 +15,11 @@ app.use(express.json());
 
 app.use(express.static('public'));
 
-if (process.env.NODE_ENV === 'production') {
-  mongoose.connect(process.env.MONGO_URI);
-} else {
-  mongoose.connect('mongodb://localhost/budget', {
-    useNewUrlParser: true,
-    useFindAndModify: false,
-    useUnifiedTopology: true,
-  });
-}
+mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost/budget', {
+  useNewUrlParser: true,
+  useFindAndModify: false,
+  useUnifiedTopology: true,
+});
 
 // routes
 app.use(require('./routes/api.js'));
