@@ -7,7 +7,7 @@
     "start": "if-env NODE_ENV=production && npm run start:prod || npm run start:dev",
     "start:prod": "npm run build && node server.js",
     "start:dev": "concurrently \"npm run server\" \"cd client && npm run start\"",
-    "server": "nodemon server.js --ignore client",
+    "server": "nodemon server.js --prefix client",
     "build": "cd client && npm run build",
     "install": "cd client && npm install",
     "client": "cd client && npm start"
