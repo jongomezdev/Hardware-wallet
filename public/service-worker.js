@@ -6,8 +6,8 @@ const FILES_TO_CACHE = [
   'assets/js/index.js',
   'https://cdn.jsdelivr.net/npm/chart.js@2.8.0',
   'assets/js/db.js',
-  'assets/images/icons/icon-192x192.png',
-  'assets/images/icons/icon-512x512.png',
+  'assets/icons/icon-192x192.png',
+  'assets/icons/icon-512x512.png',
 ];
 
 const CACHE_NAME = 'static-cache-v2';
@@ -62,6 +62,7 @@ self.addEventListener('fetch', function (evt) {
             })
             .catch((err) => {
               // Network request failed, try to get it from the cache.
+              console.log(err);
               return cache.match(evt.request);
             });
         })
