@@ -1,12 +1,12 @@
 {
-  "name": "budget-app",
+  "name": "hardware-wallet",
   "version": "1.0.0",
   "description": "",
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js",
-    "lite-server": "lite-server"
+    "dev": "lite-server"
   },
   "repository": {
     "type": "git",
