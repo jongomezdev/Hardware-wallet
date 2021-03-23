@@ -1,6 +1,10 @@
 {
   "short_name": "Hardware wallet",
   "name": "Hardware wallet",
+  "start_url": "/",
+  "background_color": "#ffffff",
+  "display": "standalone",
+  "theme_color": "#ffffff",
   "icons": [
     {
       "src": "assets/icons/icon-192x192.png",
@@ -12,9 +16,5 @@
       "sizes": "512x512",
       "type": "image/png"
     }
-  ],
-  "start_url": "/",
-  "background_color": "#ffffff",
-  "display": "standalone",
-  "theme_color": "#ffffff"
+  ]
 }
